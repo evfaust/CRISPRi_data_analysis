@@ -90,5 +90,5 @@ done
 # store statistics/diagnostics of merging and aligning somewhere
 # options for strandedness, top_hits_only, etc?
 # options for filtering by average Q value or trimming non-overlapping sections?
-
+# user fields options? also put in help for output
 
