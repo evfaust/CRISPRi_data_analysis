@@ -14,10 +14,12 @@ Help()
     echo "r     Enter the folder path storing raw paired-end .fastq.gz (zipped) sequence files. Ensure paired files have the same prefix and end with '_R1.fastq.gz' or _R2.fastq.gz'. 
 Merged .fasta sequence files will be stored here."
     echo "d     Enter the database .fasta file as alignment reference. Must contain the reverse complements of guides."
-    echo "o     Enter the desired output folder for storing alignment .tsv files. Script will create folder if it does not exist."
+    echo "a     Enter the desired output folder for storing alignment .tsv files. Script will create folder if it does not exist."
     echo "i     Enter the percent identity for alignment as a fraction. (Default is 0.9.)"
     echo "m     Enter the minimum sequence length for vsearch alignment. (Default is 1.)"
     echo "t     Enter the target coverage for vsearch alignment. (Default is 1.)"
+    echo "c     Enter the desired output folder for storing raw counts .tsv files. Script will create folder if it does not exist."
+    echo "w     Enter the name of the wash control as it appears in your guide library database file." 
     echo
     echo "Note: it is also recommended to look at read quality using softwares such as fastqc. Expect fails in ###. 
     Q score 30 is considered very good, and N ratio should not exceed 5% (lack of confidence at a certain position - indicates machine malfunction)"
@@ -39,14 +41,14 @@ Target_Coverage=1 # default target coverage
 # Process the input options. Add options as needed.        #
 ############################################################
 # Get the options
-while getopts "hr:o:d:i:m:t:" option; do
+while getopts "hr:o:d:i:m:t:c:w:" option; do
     case $option in
         h) # display Help
             Help
             exit;;
         r) # Enter the raw sequence folder
             Raw_Seq_Folder=$OPTARG;;
-        o) # Enter the desired output folder for storing alignment .tsv files
+        a) # Enter the desired output folder for storing alignment .tsv files
             Output_Alignments_Folder=$OPTARG;;
         d) # Enter the database file
             Database_File=$OPTARG;;
@@ -56,6 +58,10 @@ while getopts "hr:o:d:i:m:t:" option; do
             Min_Seq_Length=$OPTARG;;
         t) # Enter the target coverage
             Target_Coverage=$OPTARG;;
+        c) # Enter the desired output folder for storing raw counts .tsv files
+            Output_Counts_Folder=$OPTARG;;
+        w) # Enter the name of the wash control
+            Wash_Control=$OPTARG;;
         \?) # Invalid option
             echo "Error: Invalid option"
             exit;;
@@ -74,16 +80,28 @@ unique_samples=($(ls $Raw_Seq_Folder | grep -E 'R[1-2].fastq$' | cut -d'_' -f1 |
 if [ ! -d "$Output_Alignments_Folder" ]; then
     mkdir -p "$Output_Alignments_Folder"
 fi
+# Create Output_Counts_Folder directory if it does not already exist
+if [ ! -d "$Output_Counts_Folder" ]; then
+    mkdir -p "$Output_Counts_Folder"
+fi
 
-# For each unique sample, merge its paired fastq files, convert to fasta, and align to the library database
+
+# For each unique sample, merge its paired fastq files, convert to fasta, align to the library database, and calculate counts per guide
 for sample in ${unique_samples[@]}; 
 do
     echo "hi"
     # merge and convert to fasta
     vsearch --fastq_mergepairs ${Raw_Seq_Folder}/${sample}_R1.fastq --reverse ${Raw_Seq_Folder}/${sample}_R2.fastq --fastaout ${Raw_Seq_Folder}/${sample}_merged.fasta
     # align to provided database guide library file
-    vsearch --db $Database_File --strand both --id $Align_Percent --top_hits_only --target_cov $Target_Coverage --userfields query+target+id+qrow+trow --minseqlength $Min_Seq_Length --usearch_global ${Raw_Seq_Folder}/${sample}_merged.fasta --userout ${Output_Alignments_Folder}/${sample}.tsv
+    vsearch --db $Database_File --strand both --id $Align_Percent --top_hits_only --target_cov $Target_Coverage --userfields query+target+id+qrow+trow --minseqlength $Min_Seq_Length --usearch_global ${Raw_Seq_Folder}/${sample}_merged.fasta --userout ${Output_Alignments_Folder}/${sample}_aligned.tsv
+    # calculate counts per guide
+    python3 counter.py -f ${Output_Alignments_Folder}/${sample}_aligned.tsv -d $Database_File -o ${Output_Counts_Folder}/${sample}_counts.tsv -i 100.0 -w $Wash_Control
 done
+
+
+
+
+
 
 
 # TODO
@@ -91,4 +109,5 @@ done
 # options for strandedness, top_hits_only, etc?
 # options for filtering by average Q value or trimming non-overlapping sections?
 # user fields options? also put in help for output
+# output counts into the same .tsv file column at a time
 
