@@ -5,9 +5,10 @@
 Help()
 {
     # Display Help
-    echo "Preprocess raw paired-end sequence files from a CRISPRi screen
-(merge, convert to fasta, and align)."
+    echo "Process raw paired-end sequence files (ending with _R1.fastq.gz or _R2.fastq.gz) from a CRISPRi screen
+(unzip, merge, convert to fasta, align, count reads, and combine samples into single dataframe all_counts.tsv)."
     echo
+    echo "Example with minimum inputs: ./process_data.sh -r /path/to/raw/seqs -d /path/to/library_database -a /path/for/out_alignments -c /path/for/out_counts -w wash_control_name"
     echo "Syntax: scriptTemplate [-h|r|o|d|i|m|t]"
     echo "options:"
     echo "h     Print this help."
@@ -18,7 +19,7 @@ Merged .fasta sequence files will be stored here."
     echo "i     Enter the percent identity for alignment as a fraction. (Default is 0.9.)"
     echo "m     Enter the minimum sequence length for vsearch alignment. (Default is 1.)"
     echo "t     Enter the target coverage for vsearch alignment. (Default is 1.)"
-    echo "c     Enter the desired output folder for storing raw counts .tsv files. Script will create folder if it does not exist."
+    echo "c     FINAL OUTPUT WILL GO HERE. Enter the desired output folder for storing raw counts .tsv files. Script will create folder if it does not exist."
     echo "w     Enter the name of the wash control as it appears in your guide library database file." 
     echo
     echo "Note: it is also recommended to look at read quality using softwares such as fastqc. Expect fails in ###. 
@@ -97,6 +98,9 @@ do
     # calculate counts per guide
     python3 counter.py -f ${Output_Alignments_Folder}/${sample}_aligned.tsv -d $Database_File -o ${Output_Counts_Folder}/${sample}_counts.tsv -i 100.0 -w $Wash_Control
 done
+
+# Combine counts .tsv files into one .tsv file
+python3 combine_count_files.py -c $Output_Counts_Folder
 
 
 
