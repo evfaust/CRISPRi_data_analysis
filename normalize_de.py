@@ -5,6 +5,17 @@ import numpy as np
 from scipy.stats import ttest_ind
 import math
 
+def set_up_counts_df(all_counts_file: pathlib.Path, name_guide_column: str = 'design', sep: str = '\t') -> pd.DataFrame:
+    """Set up a pandas dataframe for working with and normalizing counts data.
+    Args:
+        all_counts_file: path to counts .tsv file with column for guide design names and column for raw aligned read counts
+        name_guide_column: name of the column containing guide design names. Default is 'design.'
+        sep: separator for the counts .tsv file. Default is '\t.'
+    """
+    counts_df = pd.read_csv(all_counts_file, sep=sep) # initialize dataframe
+    counts_df.set_index(name_guide_column, inplace=True) # set index to the guide design column
+    counts_df = counts_df.astype(float) # correct data type to float for all values
+    return counts_df
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Normalizes counts, calculates fold change and p-values')
