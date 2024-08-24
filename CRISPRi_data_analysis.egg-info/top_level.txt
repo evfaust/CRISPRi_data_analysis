@@ -1,0 +1,7 @@
+CRISPRi_data_analysis
+NEW_TEST_ALIGN_OUT
+dist
+from_Maggie
+test_out_align
+test_out_count
+test_raw_seq

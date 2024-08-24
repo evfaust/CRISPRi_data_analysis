@@ -1,0 +1,12 @@
+LICENSE
+README.md
+pyproject.toml
+CRISPRi_data_analysis/counter.py
+CRISPRi_data_analysis/gene_fitness.py
+CRISPRi_data_analysis/normalize.py
+CRISPRi_data_analysis/processing.py
+CRISPRi_data_analysis.egg-info/PKG-INFO
+CRISPRi_data_analysis.egg-info/SOURCES.txt
+CRISPRi_data_analysis.egg-info/dependency_links.txt
+CRISPRi_data_analysis.egg-info/top_level.txt
+from_Maggie/readCounter.py
