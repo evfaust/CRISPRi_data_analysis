@@ -1,7 +1,7 @@
 # CRISPRi_data_analysis
-Tool for working with data from CRISPRi experiments. Goal is to improve gold standards validation, reproducibility, and accessiblity of this type of analysis.
+(Work in progress / jumping off point) tool for working with data from CRISPRi experiments. Goal is to improve gold standards validation, reproducibility, and accessiblity of this type of analysis. Please see TODO's in the tutorial (and create issues from these on GitHub)
 
-> # Please see ***tutorials/tutorial.ipynb*** for a walkthrough of installation, implementation, and full functionality.
+> # Please see ***tutorial.ipynb*** for a walkthrough of installation, implementation, and full functionality. See also the plotting .ipynb files for help. These tutorials implement functions defined in .py files (see definitions for full documentation of parameters and outputs - code is modular).
 
 #### Inputs for typical workflow
 - folder storing raw, paired-end fastq read files from a CRISPRi experiment, with naming convention for replicates and controls
@@ -12,7 +12,6 @@ Tool for working with data from CRISPRi experiments. Goal is to improve gold sta
 
 #### Features & Uses
 - possible to run everything from a Jupyter notebook (python)
-- plotting features: polar, volcano, violin, pathways, individual guide enrichment, kmeans clustering
+- plotting features: polar, bar, volcano, top enrichment/depletion, individual guide enrichment along a gene
 - generalizable user inputs
-- different branches for gold standards comparisons: normalization, fitness scores, differential expression, false discovery rate
-- non-targeting (negative control guide) and wash control diagnostic functions
+- different normalization options for gold standards comparison, and directions for fitness scores, differential abundance, false discovery rate
