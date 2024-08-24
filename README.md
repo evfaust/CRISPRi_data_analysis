@@ -1,7 +1,7 @@
 # CRISPRi_data_analysis
 (Work in progress / jumping off point) tool for working with data from CRISPRi experiments. Goal is to improve gold standards validation, reproducibility, and accessiblity of this type of analysis. Please see TODO's in the tutorial (and create issues from these on GitHub)
 
-> # Please see ***tutorial.ipynb*** for a walkthrough of installation, implementation, and full functionality. See also the plotting .ipynb files for help. These tutorials implement functions defined in .py files (see definitions for full documentation of parameters and outputs - code is modular).
+> # Please see ***tutorial.ipynb*** for a walkthrough of installation, implementation, and full functionality. IGNORE the warnings - that was just a result of a highly similar test dataset - should be updated with a better test dataset upon further development. See also the plotting .ipynb files for help. These tutorials implement functions defined in .py files (see definitions for full documentation of parameters and outputs - code is modular).
 
 #### Inputs for typical workflow
 - folder storing raw, paired-end fastq read files from a CRISPRi experiment, with naming convention for replicates and controls
